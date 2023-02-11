@@ -2108,7 +2108,7 @@ set_history_filename (const char *args,
 
 /* Whether we're in quiet startup mode.  */
 
-static bool startup_quiet;
+static bool startup_quiet = 1;
 
 /* See top.h.  */
 
