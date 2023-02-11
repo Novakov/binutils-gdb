@@ -1,0 +1,41 @@
+name: Build Windows binaries
+
+on:
+  - push
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: MINGW64
+          install: >-
+            base-devel
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-diffutils
+            git
+            zip
+            make
+            texinfo
+      - uses: actions/checkout@v3
+        with:
+          path: src
+      - run: mkdir build
+      - run: ../src/.github/do_configure
+        working-directory: build
+      - run: make all-gdb -j5
+        working-directory: build
+      - run: make install-strip-gdb
+        working-directory: build
+      - run: src/.github/install_dlls
+      - run: cp src/.github/README.md install/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: gdb-win64
+          path: install/**/*.*
+          if-no-files-found: error
