@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+INSTALL_DIR=$(realpath.exe --canonicalize-missing $SCRIPT_DIR/../../install)
+
+$SCRIPT_DIR/../configure \
+    --prefix=$INSTALL_DIR/ \
+    --host=x86_64-w64-mingw32 \
+    --enable-static \
+    --enable-targets=all \
+    --disable-sim \
+    --disable-gdbserver \
+    --disable-unittests \
+    --enable-strip \
+    --disable-debug \
+    --with-python=$SCRIPT_DIR/python-config-stub \
+    --with-system-gdbinit-dir=$INSTALL_DIR/share/gdb/system-gdbinit \
+    --disable-source-highlight \
+
+

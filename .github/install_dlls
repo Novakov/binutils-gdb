@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+INSTALL_DIR=$(realpath.exe --canonicalize-missing $SCRIPT_DIR/../../install)
+
+for f in $INSTALL_DIR/bin/*.exe
+do
+    echo $f
+    ldd $f | grep -vi System32 | grep -vi python | gawk '{ print $3 }' | xargs -rt cp -t $INSTALL_DIR/bin
+    echo "---"
+done
