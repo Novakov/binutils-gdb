@@ -398,11 +398,11 @@ gdbarch_init_osabi (struct gdbarch_info info, struct gdbarch *gdbarch)
       return;
     }
 
-  warning
-    ("A handler for the OS ABI \"%s\" is not built into this configuration\n"
-     "of GDB.  Attempting to continue with the default %s settings.\n",
-     gdbarch_osabi_name (info.osabi),
-     info.bfd_arch_info->printable_name);
+  // warning
+  //   ("A handler for the OS ABI \"%s\" is not built into this configuration\n"
+  //    "of GDB.  Attempting to continue with the default %s settings.\n",
+  //    gdbarch_osabi_name (info.osabi),
+  //    info.bfd_arch_info->printable_name);
 }
 
 /* Limit on the amount of data to be read.  */
