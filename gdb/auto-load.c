@@ -138,7 +138,17 @@ show_auto_load_local_gdbinit (struct ui_file *file, int from_tty,
 /* Directory list from which to load auto-loaded scripts.  It is not checked
    for absolute paths but they are strongly recommended.  It is initialized by
    _initialize_auto_load.  */
-static std::string auto_load_dir = AUTO_LOAD_DIR;
+
+static std::string GetAutoLoadDir(const char* str)
+{
+  std::string s{str};
+
+  std::replace( s.begin(), s.end(), ':', ';');
+
+  return s;
+}
+
+static std::string auto_load_dir = GetAutoLoadDir(AUTO_LOAD_DIR);
 
 /* "set" command for the auto_load_dir configuration variable.  */
 
@@ -147,7 +157,7 @@ set_auto_load_dir (const char *args, int from_tty, struct cmd_list_element *c)
 {
   /* Setting the variable to "" resets it to the compile time defaults.  */
   if (auto_load_dir.empty ())
-    auto_load_dir = AUTO_LOAD_DIR;
+    auto_load_dir = GetAutoLoadDir(AUTO_LOAD_DIR);
 }
 
 /* "show" command for the auto_load_dir configuration variable.  */
@@ -164,7 +174,7 @@ show_auto_load_dir (struct ui_file *file, int from_tty,
 /* Directory list safe to hold auto-loaded files.  It is not checked for
    absolute paths but they are strongly recommended.  It is initialized by
    _initialize_auto_load.  */
-static std::string auto_load_safe_path = AUTO_LOAD_SAFE_PATH;
+static std::string auto_load_safe_path = GetAutoLoadDir(AUTO_LOAD_SAFE_PATH);
 
 /* Vector of directory elements of AUTO_LOAD_SAFE_PATH with each one normalized
    by tilde_expand and possibly each entries has added its gdb_realpath
@@ -182,7 +192,7 @@ auto_load_expand_dir_vars (const char *string)
   substitute_path_component (&s, "$debugdir", debug_file_directory.c_str ());
 
   if (debug_auto_load && strcmp (s, string) != 0)
-    auto_load_debug_printf ("Expanded $-variables to \"%s\".", s);
+    auto_load_debug_printf ("Expanded $-variables to \"%s\" -> \"%s\".", string, s);
 
   std::vector<gdb::unique_xmalloc_ptr<char>> dir_vec
     = dirnames_to_char_ptr_vec (s);
