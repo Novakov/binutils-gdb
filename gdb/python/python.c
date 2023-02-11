@@ -2067,9 +2067,15 @@ do_start_initialization ()
      /foo/bin/python
      /foo/lib/pythonX.Y/...
      This must be done before calling Py_Initialize.  */
-  gdb::unique_xmalloc_ptr<char> progname
-    (concat (ldirname (python_libdir.c_str ()).c_str (), SLASH_STRING, "bin",
+#ifdef WIN32
+    gdb::unique_xmalloc_ptr<char> progname
+      (concat (ldirname (python_libdir.c_str ()).c_str (), SLASH_STRING, "Scripts",
 	      SLASH_STRING, "python", (char *) NULL));
+#else
+    gdb::unique_xmalloc_ptr<char> progname
+      (concat (ldirname (python_libdir.c_str ()).c_str (), SLASH_STRING, "bin",
+ 	      SLASH_STRING, "python", (char *) NULL));
+#endif
   /* Python documentation indicates that the memory given
      to Py_SetProgramName cannot be freed.  However, it seems that
      at least Python 3.7.4 Py_SetProgramName takes a copy of the
