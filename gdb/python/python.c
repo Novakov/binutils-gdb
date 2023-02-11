@@ -2397,6 +2397,35 @@ py_initialize ()
      /foo/bin/python
      /foo/lib/pythonX.Y/...
      This must be done before calling Py_Initialize.  */
+#ifdef WIN32
+    gdb::unique_xmalloc_ptr<char> progname
+      (concat (ldirname (python_libdir.c_str ()).c_str (), SLASH_STRING, "Scripts",
+	      SLASH_STRING, "python", (char *) NULL));
+#else
+    gdb::unique_xmalloc_ptr<char> progname
+      (concat (ldirname (python_libdir.c_str ()).c_str (), SLASH_STRING, "bin",
+ 	      SLASH_STRING, "python", (char *) NULL));
+#endif
+  /* Python documentation indicates that the memory given
+     to Py_SetProgramName cannot be freed.  However, it seems that
+     at least Python 3.7.4 Py_SetProgramName takes a copy of the
+     given program_name.  Making progname_copy static and not release
+     the memory avoids a leak report for Python versions that duplicate
+     program_name, and respect the requirement of Py_SetProgramName
+     for Python versions that do not duplicate program_name.  */
+  static wchar_t *progname_copy;
+
+  std::string oldloc = setlocale (LC_ALL, NULL);
+  setlocale (LC_ALL, "");
+  size_t progsize = strlen (progname.get ());
+  progname_copy = XNEWVEC (wchar_t, progsize + 1);
+  size_t count = mbstowcs (progname_copy, progname.get (), progsize + 1);
+  if (count == (size_t) -1)
+    {
+      fprintf (stderr, "Could not convert python path to string\n");
+      return false;
+    }
+  setlocale (LC_ALL, oldloc.c_str ());
   gdb::unique_xmalloc_ptr<char> progname
     (concat (ldirname (python_libdir.c_str ()).c_str (), SLASH_STRING, "bin",
 	      SLASH_STRING, "python", (char *) NULL));
