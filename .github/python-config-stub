@@ -8,7 +8,7 @@ then
         exit 1
 fi
 
-VENV_DIR=$(realpath.exe --canonicalize-missing $SCRIPT_DIR/../../install/venv)
+VENV_DIR=$(realpath.exe --canonicalize-missing $SCRIPT_DIR/../../install/venv/)
 
 # The first argument is the path to python-config.py, ignore it.
 
