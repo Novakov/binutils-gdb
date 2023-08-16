@@ -2264,6 +2264,11 @@ do_start_initialization ()
   if (PyStatus_Exception (status))
     goto init_done;
 
+  status = PyConfig_SetString (&config, &config.executable,
+					progname_copy);
+  if (PyStatus_Exception (status))
+    goto init_done;
+
   config.write_bytecode = python_write_bytecode ();
   config.use_environment = !python_ignore_environment;
 
