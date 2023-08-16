@@ -2400,7 +2400,7 @@ py_initialize ()
 #ifdef WIN32
     gdb::unique_xmalloc_ptr<char> progname
       (concat (ldirname (python_libdir.c_str ()).c_str (), SLASH_STRING, "Scripts",
-	      SLASH_STRING, "python", (char *) NULL));
+	      SLASH_STRING, "python.exe", (char *) NULL));
 #else
     gdb::unique_xmalloc_ptr<char> progname
       (concat (ldirname (python_libdir.c_str ()).c_str (), SLASH_STRING, "bin",
