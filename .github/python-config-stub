@@ -14,7 +14,7 @@ VENV_DIR=$(realpath.exe --canonicalize-missing $SCRIPT_DIR/../../install/venv/)
 
 case "$2" in
 --includes) echo "-I$SCRIPT_DIR/python-dev/include" ;;
---ldflags) echo "-L$SCRIPT_DIR/python-dev/libs -lpython311" ;;
+--ldflags) echo "-L$SCRIPT_DIR/python-dev/libs -lpython312" ;;
 --exec-prefix) echo "$VENV_DIR" ;;
 --prefix) echo "$VENV_DIR" ;;
 *) echo "Bad arg $2.  Blech!" >&2 ; exit 1 ;;
